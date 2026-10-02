@@ -2,6 +2,7 @@
 
 # ScamWYF.ModHandler
 
+![license](https://img.shields.io/badge/license-MIT-blue)
 ![last commit](https://img.shields.io/github/last-commit/swyf-modding/Mod-Handler?label=last%20commit&color=blue)
 ![version](https://img.shields.io/badge/version-1.0.0-blue)
 ![game build](https://img.shields.io/badge/game-v82--playtest-blue)
@@ -32,6 +33,7 @@
 - [Project Structure](#project-structure)
 - [Continuous Builds](#continuous-builds)
 - [Security](#security)
+- [License](#license)
 - [Related Projects](#related-projects)
 
 ---
@@ -225,6 +227,15 @@ SWYM_RUNNER = self-hosted, windows, scamwyf
 Please do not publish suspected vulnerabilities, credentials, authentication tickets, private game data,
 or sensitive logs in a public issue. Please do not paste `BepInEx\LogOutput.log` contents in public: mods
 in this ecosystem configure API keys with it.
+
+---
+
+## License
+
+MIT — Copyright © 2026 Ras_rap. See [LICENSE](LICENSE).
+
+The shared library this mod builds against is a separate work under its own licence, included here as a
+submodule.
 
 ---
 
