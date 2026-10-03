@@ -26,7 +26,11 @@ namespace ScamWYF.ModHandler
     /// Reading [BepInPlugin] out of a file's metadata means a disabled mod can still be listed by its
     /// real name, without loading its code.
     /// </remarks>
-    [BepInPlugin(PluginGuid, "Scam WYF Mod Handler", "1.0.0")]
+    // PluginBuildInfo.Version is a generated const, stamped by build.ps1 from this repository's git
+    // tag - see mod-lib's Version.ps1. It was a "1.0.0" literal, which was correct on the first
+    // release and wrong on every one after it, and was visible to players because this mod's own
+    // Plugins tab reads the attribute back out of every dll in the folder.
+    [BepInPlugin(PluginGuid, "Scam WYF Mod Handler", PluginBuildInfo.Version)]
     public sealed class ModHandlerPlugin : ScamMod
     {
         public const string PluginGuid = "com.community.scamwyf.modhandler";
