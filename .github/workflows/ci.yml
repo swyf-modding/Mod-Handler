@@ -47,3 +47,10 @@ jobs:
         run: |
           cp src/ui/WindowGeometry.cs tests/window/WindowGeometry.cs
           dotnet run --project tests/window/WindowGeometryTests.csproj
+
+      - name: Run the content validation tests
+        working-directory: vendor/ScamWYF.Modding.Core
+        run: |
+          cp src/content/ContentSpecs.cs tests/content/ContentSpecs.cs
+          cp src/content/ContentValidation.cs tests/content/ContentValidation.cs
+          dotnet run --project tests/content/ContentTests.csproj
