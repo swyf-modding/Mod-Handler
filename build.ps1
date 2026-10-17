@@ -34,26 +34,44 @@ if (-not (Test-Path $lib)) {
 
 # The library finds the game install itself; find it here too so the extra references below can be
 # pointed at the same place.
+#
+# Every Steam library is searched, not just the one Steam itself lives in: the release is installed
+# to a library on another drive here. Only the full release counts - a leftover Playtest install is
+# ignored - and the two live under different folder names, so the release is matched by name rather
+# than by whichever library Steam happened to list first.
 $core = $null
-if ($GameDir) {
-    $core = Join-Path $GameDir 'BepInEx\core'
-} else {
-    foreach ($root in @(
-        "${env:ProgramFiles(x86)}\Steam\steamapps\common",
-        "${env:ProgramFiles}\Steam\steamapps\common",
-        "${env:HOME}\.local\share\Steam\steamapps\common",
-        "${env:HOME}\.steam\steam\steamapps\common")) {
-        foreach ($name in @('Scam With Your Friends', 'Scam With Your Friends Playtest')) {
+if (-not $GameDir) { $GameDir = $env:SWYG_GAME_DIR }
+if (-not $GameDir) {
+    $roots = @()
+    foreach ($steam in @("${env:ProgramFiles(x86)}\Steam", "${env:ProgramFiles}\Steam",
+                         "${env:LOCALAPPDATA}\Steam")) {
+        if (-not $steam) { continue }
+        $roots += (Join-Path $steam 'steamapps\common')
+
+        $vdf = Join-Path $steam 'steamapps\libraryfolders.vdf'
+        if (-not (Test-Path $vdf)) { continue }
+        try {
+            $text = Get-Content $vdf -Raw
+            foreach ($m in [regex]::Matches($text, '"path"\s+"([^"]+)"')) {
+                $roots += (Join-Path ($m.Groups[1].Value -replace '\\\\', '\') 'steamapps\common')
+            }
+        } catch { }
+    }
+    $roots += @('C:\Program Files (x86)\Steam\steamapps\common', 'D:\SteamLibrary\steamapps\common')
+    $roots = $roots | Where-Object { $_ } | Select-Object -Unique
+
+    foreach ($name in @('Scam With Your Friends')) {
+        foreach ($root in $roots) {
             $candidate = Join-Path $root $name
             if (Test-Path (Join-Path $candidate 'BepInEx\core\BepInEx.dll')) {
                 $GameDir = $candidate
-                $core = Join-Path $candidate 'BepInEx\core'
                 break
             }
         }
-        if ($core) { break }
+        if ($GameDir) { break }
     }
 }
+if ($GameDir) { $core = Join-Path $GameDir 'BepInEx\core' }
 
 if (-not $core) {
     throw "Could not find the game install. Pass -GameDir, or set SWYG_GAME_DIR."

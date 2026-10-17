@@ -4,7 +4,7 @@
 
 ![license](https://img.shields.io/badge/license-MIT-blue)
 ![version](https://img.shields.io/github/v/release/swyf-modding/Mod-Handler?label=version)
-![game build](https://img.shields.io/badge/game-v82--playtest-blue)
+![game build](https://img.shields.io/badge/game-0.1.71--swyf-blue)
 ![Unity](https://img.shields.io/badge/Unity-6000.3.10f1-blue)
 
 *Built with:*
@@ -176,7 +176,7 @@ No game DLL belongs in this repository or in a GitHub release.
 
 | Component | Verified Version |
 |---|---|
-| Scam With Your Friends | `v82-playtest` |
+| Scam With Your Friends | `0.1.71-swyf` |
 | Unity | `6000.3.10f1` |
 | BepInEx | `5.4.23.5`, Mono preloader |
 | ScamWYF.Modding.Core | built from the pinned submodule commit |
