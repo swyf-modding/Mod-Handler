@@ -14,6 +14,9 @@
 ![BepInEx](https://img.shields.io/badge/BepInEx-5.4.23.5-14172c?style=for-the-badge)
 ![UI Toolkit](https://img.shields.io/badge/UI%20Toolkit-000000?style=for-the-badge&logo=unity&logoColor=white)
 
+> ⚠️ Linux support is **very experimental** (part of the experimental Linux/Proton setup flow);
+> Windows remains the reference platform.
+
 </div>
 
 ---
@@ -45,7 +48,7 @@ each one.
 
 **Key Features:**
 
-- Lists plugin files from both `BepInEx\plugins` and `BepInEx\plugins_disabled`, so a plugin that failed
+- Lists plugin files from both `BepInEx/plugins` and `BepInEx/plugins_disabled`, so a plugin that failed
   to load is still visible
 - Reads each plugin's real name and version from its `[BepInPlugin]` metadata with Cecil, so a
   **disabled** plugin still shows its real name without its code ever being loaded
@@ -81,8 +84,8 @@ This project is not affiliated with or endorsed by the developers or publisher o
 ### Installation
 
 1. Install BepInEx and the corlib override with [Setup](https://github.com/swyf-modding/Setup).
-2. Copy `ScamWYF.ModHandler.dll` into `BepInEx\plugins`.
-3. Copy `ScamWYF.Modding.Core.dll` into `BepInEx\core`, if it is not already there.
+2. Copy `ScamWYF.ModHandler.dll` into `BepInEx/plugins`.
+3. Copy `ScamWYF.Modding.Core.dll` into `BepInEx/core`, if it is not already there.
 4. Launch the game once so BepInEx writes its config.
 
 Everything still works with this mod uninstalled — you simply do not get that one tab.
@@ -92,17 +95,21 @@ Everything still works with this mod uninstalled — you simply do not get that 
 ```powershell
 git clone --recurse-submodules https://github.com/swyf-modding/Mod-Handler.git
 cd Mod-Handler
-.\build.ps1                # build and install
-.\build.ps1 -NoCopy -Test  # build, run the tests, do not touch the game
+./build.ps1                # build and install
+./build.ps1 -NoCopy -Test  # build, run the tests, do not touch the game
 ```
 
-The library is a submodule, built to its own dll in `BepInEx\core` rather than compiled into this one.
+The library is a submodule, built to its own dll in `BepInEx/core` rather than compiled into this one.
 That is deliberate: the library owns the singletons — the hotkey table, the menu, the panel — so
 embedding it gave every mod a private copy, and F1 opened two windows. `build.ps1` builds the library
 first and compiles this mod against the dll it just produced, so the reference is never stale.
 
 Roslyn runs directly; no .NET SDK is needed to build. The game install is auto-detected, or set
 `SWYG_GAME_DIR`.
+
+On Linux and macOS the same commands run under `pwsh`, and a Proton install is found under the Steam
+libraries in `~/.steam` and `~/.local/share`. The mod is a Windows dll either way — it is loaded into
+the game's own process, which Proton is running.
 
 #### Versioning
 
@@ -135,10 +142,10 @@ name.
 
 | Control | What it does |
 |---|---|
-| Toggle | Moves the dll between `BepInEx\plugins` and `BepInEx\plugins_disabled` |
+| Toggle | Moves the dll between `BepInEx/plugins` and `BepInEx/plugins_disabled` |
 | Refresh | Re-reads both folders |
-| Open plugins folder | Opens `BepInEx\plugins` |
-| Open disabled folder | Opens `BepInEx\plugins_disabled` |
+| Open plugins folder | Opens `BepInEx/plugins` |
+| Open disabled folder | Opens `BepInEx/plugins_disabled` |
 
 For plugins running on the shared library, live information is used instead of the file: real load
 state, and the reason if one failed. A dll with no `[BepInPlugin]` — a shared library, most likely — is
@@ -147,7 +154,7 @@ listed with a note saying there is nothing to enable, rather than a toggle that 
 ### Testing
 
 ```powershell
-.\build.ps1 -NoCopy -Test
+./build.ps1 -NoCopy -Test
 ```
 
 That compiles the mod against the library, then runs the library's API surface check and its behaviour
@@ -160,7 +167,7 @@ To verify a session headlessly, without the game taking over your screen:
 & "C:\...\Scam With Your Friends.exe" -batchmode -nographics
 ```
 
-BepInEx still initialises and writes `BepInEx\LogOutput.log`, so plugin loading can be checked without a
+BepInEx still initialises and writes `BepInEx/LogOutput.log`, so plugin loading can be checked without a
 display. A preloader crash lands in `preloader_*.log` in the game root.
 
 > [!TIP]
@@ -181,7 +188,7 @@ No game DLL belongs in this repository or in a GitHub release.
 | BepInEx | `5.4.23.5`, Mono preloader |
 | ScamWYF.Modding.Core | built from the pinned submodule commit |
 | C# language level | `7.3` |
-| Platform | Windows x64 |
+| Platform | Windows x64, including under Proton on Linux |
 
 The mod compiles with `-nostdlib+` against the game's own `mscorlib.dll`, so a call that managed
 stripping removed is a build error rather than a `MissingMethodException` in a session.
@@ -211,7 +218,7 @@ build.ps1             Wraps the shared library's build script
 vendor/               The shared library, as a submodule
 ```
 
-`Mono.Cecil` comes from `BepInEx\core`, which the build script passes as an extra reference.
+`Mono.Cecil` comes from `BepInEx/core`, which the build script passes as an extra reference.
 
 Deliberately absent: no `Update`, no `OnGUI`, and no window of this mod's own. `ScamMod` seals the Unity
 callbacks, the shared runner does that work once for every mod, and the menu is the library's. This mod
@@ -249,7 +256,7 @@ Releases are published by hand; see [RELEASING.md](RELEASING.md).
 ## Security
 
 Please do not publish suspected vulnerabilities, credentials, authentication tickets, private game data,
-or sensitive logs in a public issue. Please do not paste `BepInEx\LogOutput.log` contents in public: mods
+or sensitive logs in a public issue. Please do not paste `BepInEx/LogOutput.log` contents in public: mods
 in this ecosystem configure API keys with it.
 
 ---
