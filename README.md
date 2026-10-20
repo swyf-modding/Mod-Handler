@@ -123,7 +123,7 @@ the game's own process, which Proton is running.
 
 That last row is why it is generated rather than typed. It used to be a `"1.0.0"` literal in the
 source: correct on the first release, silently wrong on every release after it, and shown to players
-by both this tab and the launcher's Mods tab. It is a `const` because `[BepInPlugin]`'s arguments must
+by both this tab and Switchboard's Mods tab. It is a `const` because `[BepInPlugin]`'s arguments must
 be compile-time constants. See [`Version.ps1`](https://github.com/swyf-modding/mod-lib/blob/main/Version.ps1),
 which the mod's `build.ps1` and the library share.
 
@@ -276,5 +276,5 @@ submodule.
 |---|---|
 | [mod-lib](https://github.com/swyf-modding/mod-lib) | Shared library: base class, menu, config editor, hot reload, patch coordinator |
 | [Setup](https://github.com/swyf-modding/Setup) | Installs BepInEx, the corlib override, and the vtable patches this game needs |
-| [Launcher](https://github.com/swyf-modding/Launcher) | Installs, launches, and manages mods from outside the game |
+| [Switchboard](https://github.com/swyf-modding/Switchboard) | Installs, launches, and manages mods from outside the game |
 | [AI-Backend](https://github.com/swyf-modding/AI-Backend) | Routes the game's AI calls to your own LLM |
